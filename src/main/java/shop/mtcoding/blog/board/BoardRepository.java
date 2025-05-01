@@ -25,7 +25,7 @@ public class BoardRepository {
     }
 
     public Board findById(Integer id) {
-        return em.find(Board.class, id);
+        return em.find(Board.class, id); // 떠다니는 프라이머리 객체를 찾아서 있으면 캐싱, 없으면 쿼리 날림
     }
 
     // 그룹 함수 : Long 리턴
@@ -108,5 +108,11 @@ public class BoardRepository {
     public Board save(Board board) {
         em.persist(board);
         return board;
+    }
+
+    public void deleteById(Integer id) {
+        em.createQuery("delete from Board b where b.id = :id")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 }

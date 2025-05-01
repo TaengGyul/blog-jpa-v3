@@ -10,6 +10,23 @@ import java.util.List;
 public class BoardResponse {
 
     @Data
+    public static class UpdateFormDTO {
+        private Integer id; // PK는 반드시 있어야 한다. (반드시 가져간다.)
+        private String title;
+        private String content;
+        private Boolean isPublic;
+//        private Integer userId; // ORM 할 필요가 없음
+//        private String createdAt;
+
+        public UpdateFormDTO(Board board) {
+            this.id = board.getId();
+            this.title = board.getTitle();
+            this.content = board.getContent();
+            this.isPublic = board.getIsPublic();
+        }
+    }
+
+    @Data
     public static class DTO {
         private Integer id;
         private String title;
