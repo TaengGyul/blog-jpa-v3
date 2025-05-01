@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import shop.mtcoding.blog._core.util.Resp;
 
 import java.util.Map;
@@ -21,12 +18,7 @@ public class UserController {
     private final UserService userService;
     private final HttpSession session;
 
-    // ViewResolver -> prefix = /templates/ -> suffix = .mustache
-    @GetMapping("/user/update-form")
-    public String updateForm() {
-        return "user/update-form";
-    }
-
+    // TODO : JMT 이후에 하기
     @PostMapping("/user/update")
     public String update(@Valid UserRequest.UpdateDTO updateDTO, Errors errors) {
         User sessionUser = (User) session.getAttribute("sessionUser");
@@ -43,30 +35,15 @@ public class UserController {
         return Resp.ok(dto);
     }
 
-    @GetMapping("/join-form")
-    public String joinForm() {
-        return "user/join-form";
-    }
 
     @PostMapping("/join")
-    public String join(@Valid UserRequest.JoinDTO reqDTO, Errors errors) {
-//        boolean r1 = Pattern.matches("^[a-zA-Z0-9]{2,20}$", joinDTO.getUsername());
-//        boolean r2 = Pattern.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()])[a-zA-Z\\d!@#$%^&*()]{6,20}$", joinDTO.getPassword());
-//        boolean r3 = Pattern.matches("^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$", joinDTO.getEmail());
-//
-//        if (!r1) throw new Exception400("유저네임은 2-20자이며, 특수문자,한글이 포함될 수 없습니다");
-//        if (!r2) throw new Exception400("패스워드는 4-20자이며, 특수문자,영어 대문자,소문자, 숫자가 포함되어야 하며, 공백이 있을 수 없습니다");
-//        if (!r3) throw new Exception400("이메일 형식에 맞게 적어주세요");
-
+    public @ResponseBody Resp<?> join(@Valid @RequestBody UserRequest.JoinDTO reqDTO, Errors errors) {
         UserResponse.DTO respDTO = userService.회원가입(reqDTO);
-        return "redirect:/login-form";
+        return Resp.ok(respDTO);
     }
 
-    @GetMapping("/login-form")
-    public String loginForm() {
-        return "user/login-form";
-    }
 
+    // TODO : JMT 이후에 하기
     @PostMapping("/login")
     public String login(@Valid UserRequest.LoginDTO loginDTO, Errors errors, HttpServletResponse response) {
         //System.out.println(loginDTO);
@@ -86,6 +63,7 @@ public class UserController {
         return "redirect:/";
     }
 
+    // TODO : JMT 이후에 하기
     @GetMapping("/logout")
     public String logout() {
         session.invalidate();
